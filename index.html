@@ -17,6 +17,7 @@
       <a href="#ozel">Özel Baskı</a>
       <a href="#hakkimizda">Hakkımızda</a>
       <a class="btn small" data-wa target="_blank" rel="noopener">WhatsApp</a>
+      <button type="button" id="open-cart" class="btn ghost small cart-btn">Sepet <span id="cart-count" class="badge">0</span></button>
     </nav>
   </div>
 </header>
@@ -81,6 +82,34 @@
     </span>
   </div>
 </footer>
+
+<!-- Sepet -->
+<div id="overlay" class="overlay"></div>
+<aside id="drawer" class="drawer" aria-hidden="true" aria-label="Sepet">
+  <div class="drawer-head">
+    <h2>Sepetin</h2>
+    <button type="button" id="close-cart" class="icon-btn" aria-label="Kapat">✕</button>
+  </div>
+  <div id="cart-items" class="cart-items"></div>
+  <div id="cart-foot" class="cart-foot" hidden>
+    <div class="total-row"><span>Toplam</span><strong id="cart-total"></strong></div>
+    <p id="cart-note" class="small-note"></p>
+    <form id="order-form" class="form">
+      <label>Ad Soyad
+        <input name="name" required placeholder="Adın Soyadın">
+      </label>
+      <label>Adres (il, ilçe, mahalle, açık adres)
+        <textarea name="address" rows="3" required placeholder="Kargo için adresin"></textarea>
+      </label>
+      <label>Not (isteğe bağlı)
+        <input name="note" placeholder="Örn: kırmızı renk olsun">
+      </label>
+      <button class="btn" type="submit">Siparişi WhatsApp'a gönder</button>
+    </form>
+    <button type="button" id="clear-cart" class="link-btn">Sepeti boşalt</button>
+  </div>
+</aside>
+<div id="toast" class="toast" role="status"></div>
 
 <script src="config.js"></script>
 <script src="app.js"></script>
