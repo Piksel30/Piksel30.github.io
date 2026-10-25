@@ -6,7 +6,7 @@ const SITE = {
   name: "Yiğityo 3D",
   slogan: "3D yazıcıyla üretilen spinner ball ve oyuncaklar",
   whatsapp: "905454655280",
-  instagram: "",   // Instagram kullanıcı adını buraya yaz (@ olmadan, boşluksuz). Boş kalırsa link gizlenir.
+  instagram: "yusufyigitekici",   // Instagram kullanıcı adını buraya yaz (@ olmadan, boşluksuz). Boş kalırsa link gizlenir.
   about:
     "Merhaba, ben Yiğit. Tüm ürünlerimi kendi 3D yazıcımda katman katman üretiyorum. " +
     "Spinner ball ve oyuncakların yanında kendi fikrini de bastırabilirsin: " +
