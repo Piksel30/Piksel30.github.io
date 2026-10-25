@@ -1,0 +1,71 @@
+YENİ ÖZELLİKLER İÇİN config.js'E EKLEYECEKLERİN
+================================================
+config.js'i silip yerine KOYMA. Sadece aşağıdaki parçaları kendi dosyana ekle.
+Hiçbir şey eklemesen de site eskisi gibi çalışır, bunlar isteğe bağlı.
+
+------------------------------------------------
+1) SITE bölümüne ekle (about: ... satırından ÖNCE, virgüllere dikkat)
+------------------------------------------------
+
+  // Renk seçeneği olan ürünlerde görünen renkler. Elindeki filament renklerini yaz.
+  colors: ["Siyah", "Beyaz", "Kırmızı", "Mavi", "Yeşil", "Sarı"],
+
+  // Teslim süresi (SSS'de ve sipariş bilgisinde görünür). Gerçek sürene göre yaz.
+  // Örn: "2-4 gün". Boş bırakırsan "ürüne göre değişir" yazar.
+  deliveryDays: "",
+
+  // Kampanya. İstemiyorsan bu bloğu hiç ekleme.
+  // minItems: en az kaç ürün, percent: yüzde kaç indirim
+  // campaign: { minItems: 3, percent: 10, text: "3 ürün al, %10 indirim kazan!" },
+
+
+------------------------------------------------
+2) Mevcut bir ürüne renk seçeneği vermek için
+------------------------------------------------
+Ürün bloğunun içine şu satırı ekle (virgül unutma):
+
+    colors: true,
+
+"true" yazarsan yukarıdaki renk listesi çıkar. İstersen ürüne özel liste de yazabilirsin:
+
+    colors: ["Kırmızı", "Mavi"],
+
+Rozet (kartın köşesinde etiket) için:
+
+    badge: "Yeni",
+
+
+------------------------------------------------
+3) PRODUCTS listesine eklenecek yeni ürünler
+------------------------------------------------
+PRODUCTS = [ ... ] içinde, son üründen sonra virgül koyup yapıştır.
+FİYATLARI KENDİNE GÖRE DEĞİŞTİR! (60 ve 90 sadece örnek.)
+
+  {
+    name: "İsimli Anahtarlık",
+    price: 60,
+    category: "Kişiye Özel",
+    material: "PLA",
+    size: "",
+    desc: "Üzerinde istediğin isim yazan kişiye özel anahtarlık. Rengini seç, ismini yaz.",
+    image: "",
+    emoji: "🔑",
+    colors: true,
+    personalize: "Üzerinde yazacak isim",
+    badge: "Kişiye özel"
+  },
+  {
+    name: "Kapı İsimliği",
+    price: 90,
+    category: "Kişiye Özel",
+    material: "PLA",
+    size: "",
+    desc: "Oda kapısı için kişiye özel isimlik. Rengini seç, ismini yaz.",
+    image: "",
+    emoji: "🚪",
+    colors: true,
+    personalize: "Üzerinde yazacak isim",
+    badge: "Kişiye özel"
+  }
+
+"personalize" yazan ürünlerde müşteri sepete eklemeden önce ismi yazmak zorunda.

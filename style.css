@@ -155,3 +155,30 @@ button.btn { font-family: inherit; }
 @media (max-width: 640px) {
   .cart-items { max-height: 30%; }
 }
+
+/* ---------- Seçenekler, rozet, kampanya, SSS ---------- */
+.media { position: relative; }
+.tag {
+  position: absolute; top: 10px; left: 10px; background: var(--accent); color: #fff; font-size: .72rem; font-weight: 700;
+  padding: 4px 10px; border-radius: 999px;
+}
+.opts { display: grid; gap: 8px; margin-bottom: 12px; }
+.opts label { display: grid; gap: 4px; font-size: .78rem; font-weight: 600; color: var(--muted); }
+.opts select, .opts input {
+  font: inherit; font-size: .9rem; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink);
+}
+.opts select:focus, .opts input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+
+.promo { background: var(--accent); color: #fff; text-align: center; font-weight: 700; font-size: .9rem; padding: 8px 16px; }
+.total-row.disc { color: var(--accent-dark); font-size: 1rem; margin-bottom: 4px; }
+
+.faq { display: grid; gap: 10px; }
+.faq details { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; }
+.faq summary { cursor: pointer; font-weight: 700; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; color: var(--accent); font-size: 1.3rem; line-height: 1; }
+.faq details[open] summary::after { content: "−"; }
+.faq p { margin: 10px 0 0; color: var(--muted); }
+.card { min-width: 0; }
+.opts label { min-width: 0; }
+.opts select, .opts input { width: 100%; min-width: 0; box-sizing: border-box; }

@@ -3,11 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>3D Baskı Mağazası</title>
-  <meta name="description" content="3D yazıcıyla üretilen özel tasarım ürünler ve kişiye özel baskı siparişi.">
+  <title>Yiğityo 3D | Spinner Ball ve Oyuncaklar</title>
+  <meta name="description" content="3D yazıcıyla üretilen spinner ball, oyuncaklar ve kişiye özel ürünler. WhatsApp'tan kolay sipariş.">
+
+  <!-- Link paylaşılınca (WhatsApp, Instagram, Google) görünen önizleme -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:title" content="Yiğityo 3D | Spinner Ball ve Oyuncaklar">
+  <meta property="og:description" content="3D yazıcıyla üretilen spinner ball, oyuncaklar ve kişiye özel ürünler. WhatsApp'tan kolay sipariş.">
+  <meta property="og:url" content="https://piksel30.github.io/">
+  <meta property="og:image" content="https://piksel30.github.io/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<div id="promo" class="promo" hidden></div>
 
 <header class="top">
   <div class="wrap bar">
@@ -15,6 +27,7 @@
     <nav>
       <a href="#urunler">Ürünler</a>
       <a href="#ozel">Özel Baskı</a>
+      <a href="#sss">SSS</a>
       <a href="#hakkimizda">Hakkımızda</a>
       <a class="btn small" data-wa target="_blank" rel="noopener">WhatsApp</a>
       <button type="button" id="open-cart" class="btn ghost small cart-btn">Sepet <span id="cart-count" class="badge">0</span></button>
@@ -67,9 +80,16 @@
     </div>
   </section>
 
-  <section id="hakkimizda" class="wrap narrow section">
-    <h2>Hakkımızda</h2>
-    <p id="about-text" class="lead"></p>
+  <section id="sss" class="wrap narrow section">
+    <h2>Sık sorulan sorular</h2>
+    <div id="faq-list" class="faq"></div>
+  </section>
+
+  <section id="hakkimizda" class="section alt">
+    <div class="wrap narrow">
+      <h2>Hakkımızda</h2>
+      <p id="about-text" class="lead"></p>
+    </div>
   </section>
 </main>
 
@@ -92,6 +112,7 @@
   </div>
   <div id="cart-items" class="cart-items"></div>
   <div id="cart-foot" class="cart-foot" hidden>
+    <div id="disc-row" class="total-row disc" hidden><span id="disc-label"></span><strong id="disc-val"></strong></div>
     <div class="total-row"><span>Toplam</span><strong id="cart-total"></strong></div>
     <p id="cart-note" class="small-note"></p>
     <form id="order-form" class="form">
