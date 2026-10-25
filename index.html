@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3D Baskı Mağazası</title>
+  <meta name="description" content="3D yazıcıyla üretilen özel tasarım ürünler ve kişiye özel baskı siparişi.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap bar">
+    <a class="logo" href="#"><span class="dot"></span><span data-site-name>Marka Adın</span></a>
+    <nav>
+      <a href="#urunler">Ürünler</a>
+      <a href="#ozel">Özel Baskı</a>
+      <a href="#hakkimizda">Hakkımızda</a>
+      <a class="btn small" data-wa target="_blank" rel="noopener">WhatsApp</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Katman katman üretildi</p>
+      <h1 id="slogan"></h1>
+      <div class="actions">
+        <a class="btn" href="#urunler">Ürünlere göz at</a>
+        <a class="btn ghost" href="#ozel">Özel baskı iste</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="urunler" class="wrap section">
+    <h2>Ürünler</h2>
+    <div id="filters" class="filters"></div>
+    <div id="grid" class="grid"></div>
+  </section>
+
+  <section id="ozel" class="section alt">
+    <div class="wrap narrow">
+      <h2>Kendi fikrini bastır</h2>
+      <p class="lead">Ne istediğini yaz, formu gönderince WhatsApp'ta mesajın hazır gelir. Fiyatı ve süreyi birlikte netleştiririz.</p>
+      <form id="custom-form" class="form">
+        <label>Adın
+          <input name="name" required placeholder="Adın Soyadın">
+        </label>
+        <label>Ne istiyorsun?
+          <textarea name="what" rows="3" required placeholder="Örn: Arabam için şu ölçüde bir telefon tutucu"></textarea>
+        </label>
+        <div class="row">
+          <label>Ölçü
+            <input name="size" placeholder="Örn: 10 cm">
+          </label>
+          <label>Renk
+            <input name="color" placeholder="Örn: siyah">
+          </label>
+          <label>Adet
+            <input name="qty" type="number" min="1" value="1">
+          </label>
+        </div>
+        <button class="btn" type="submit">WhatsApp'ta gönder</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="hakkimizda" class="wrap narrow section">
+    <h2>Hakkımızda</h2>
+    <p id="about-text" class="lead"></p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span>© <span id="year"></span> <span data-site-name></span></span>
+    <span>
+      <a data-ig target="_blank" rel="noopener">Instagram</a> ·
+      <a data-wa target="_blank" rel="noopener">WhatsApp</a>
+    </span>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
