@@ -15,13 +15,13 @@ const PRODUCTS = [
     price: 100,
     category: "Spinner Ball",
     material: "PLA",
-    size: "Ekran görüntüsü 2026-10-25 112445",
+    size: "",
     desc: "3D yazıcıyla basılmış, elde çevirmesi çok keyifli spinner ball. Renk seçeneği için yaz.",
-    image: "",
+    image: "Ekran görüntüsü 2026-10-25 112445",
     emoji: "🌀"
   },
   {
-    name: "Oyuncak 1 (örnek)",
+    name: "kozalak (örnek)",
     price: "Fiyat için yaz",
     category: "Oyuncak",
     material: "PLA",
@@ -31,7 +31,7 @@ const PRODUCTS = [
     emoji: "🧸"
   },
   {
-    name: "Oyuncak 2 (örnek)",
+    name: "?",
     price: "Fiyat için yaz",
     category: "Oyuncak",
     material: "PLA",
