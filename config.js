@@ -17,7 +17,7 @@ const PRODUCTS = [
     material: "PLA",
     size: "",
     desc: "3D yazıcıyla basılmış, elde çevirmesi çok keyifli spinner ball. Renk seçeneği için yaz.",
-    image: "Ekran görüntüsü 2026-10-25 112445",
+    image: "spiner.png",
     emoji: "🌀"
   },
   {
