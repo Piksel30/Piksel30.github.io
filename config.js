@@ -1,21 +1,14 @@
-// ============================================================
-//  BURAYI KENDİNE GÖRE DÜZENLE — site bu dosyadan okur
-// ============================================================
-
 const SITE = {
   name: "Yiğityo 3D",
   slogan: "3D yazıcıyla üretilen spinner ball ve oyuncaklar",
   whatsapp: "905454655280",
-  instagram: "yusufyigitekici",   // Instagram kullanıcı adını buraya yaz (@ olmadan, boşluksuz). Boş kalırsa link gizlenir.
+  instagram: "yusufyigitekici",
   about:
     "Merhaba, ben Yiğit. Tüm ürünlerimi kendi 3D yazıcımda katman katman üretiyorum. " +
     "Spinner ball ve oyuncakların yanında kendi fikrini de bastırabilirsin: " +
     "ne istediğini, rengini ve ölçüsünü söyle, gerisini bana bırak."
 };
 
-// Her ürün için bir blok. Yeni ürün eklemek = bir bloğu kopyalayıp yapıştırmak.
-// price: sayı yaz (örn. 100) ya da fiyat belli değilse "Fiyat için yaz"
-// image: "img/dosyaadi.jpg" (fotoğrafı img klasörüne koy). Boş bırakırsan emoji görünür.
 const PRODUCTS = [
   {
     name: "Spinner Ball",
@@ -24,12 +17,12 @@ const PRODUCTS = [
     material: "PLA",
     size: "",
     desc: "3D yazıcıyla basılmış, elde çevirmesi çok keyifli spinner ball. Renk seçeneği için yaz.",
-    image: image: "spinner.jpg"
+    image: "",
     emoji: "🌀"
   },
   {
-    name: "kozalak" (örnek)",
-    price: "50",
+    name: "Oyuncak 1 (örnek)",
+    price: "Fiyat için yaz",
     category: "Oyuncak",
     material: "PLA",
     size: "",
@@ -38,7 +31,7 @@ const PRODUCTS = [
     emoji: "🧸"
   },
   {
-    name: "daha sonra" (örnek)",
+    name: "Oyuncak 2 (örnek)",
     price: "Fiyat için yaz",
     category: "Oyuncak",
     material: "PLA",
