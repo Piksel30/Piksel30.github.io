@@ -15,7 +15,7 @@ const PRODUCTS = [
     price: 100,
     category: "Spinner Ball",
     material: "PLA",
-    size: "",
+    size: "Ekran görüntüsü 2026-10-25 112445",
     desc: "3D yazıcıyla basılmış, elde çevirmesi çok keyifli spinner ball. Renk seçeneği için yaz.",
     image: "",
     emoji: "🌀"
