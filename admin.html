@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Yönetim Paneli</title>
+<style>
+:root{--bg:#fafaf7;--ink:#1d1d1b;--muted:#6b6b66;--accent:#ff5a1f;--accent-dark:#d94710;--card:#fff;--line:#e8e6df;--alt:#f1efe8;--ok:#1a7f45;--err:#c0262d}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+.wrap{max-width:820px;margin:0 auto;padding:0 18px}
+.top{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.bar{display:flex;align-items:center;justify-content:space-between;height:58px;gap:10px}
+.pill{font-size:.8rem;font-weight:700;padding:5px 12px;border-radius:999px}
+.pill.off{background:var(--alt);color:var(--muted)}
+.pill.on{background:#dff5e8;color:var(--ok)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 14px}
+.tabs button{font:inherit;font-weight:700;padding:9px 18px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.panel{display:none;background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:40px}
+.panel.on{display:block}
+h2{margin:0 0 6px;font-size:1.35rem}
+h3{margin:24px 0 8px;font-size:1.05rem}
+.lead{color:var(--muted);margin:0 0 16px}
+label{display:grid;gap:5px;font-weight:600;font-size:.9rem;margin-bottom:14px}
+input,textarea{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;width:100%}
+input:focus,textarea:focus{outline:2px solid var(--accent);border-color:transparent}
+input[type=checkbox]{width:auto}
+.check{display:flex;align-items:center;gap:10px;font-weight:700;margin-bottom:14px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.btn{font:inherit;font-weight:700;padding:11px 22px;border-radius:999px;border:2px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;text-decoration:none;display:inline-block}
+.btn:hover{background:var(--accent-dark);border-color:var(--accent-dark)}
+.btn:disabled{opacity:.55;cursor:wait}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.ghost:hover{background:var(--accent);color:#fff}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.msg{margin-top:12px;font-weight:600;min-height:1.2em}
+.msg.ok{color:var(--ok)}
+.msg.err{color:var(--err)}
+.preview{background:var(--accent);color:#fff;text-align:center;font-weight:700;padding:8px 14px;border-radius:10px;margin:6px 0 6px;font-size:.9rem;min-height:2.2em}
+details{background:var(--alt);border-radius:12px;padding:12px 16px;margin-bottom:16px}
+details summary{cursor:pointer;font-weight:700}
+details ol,details ul{margin:10px 0 0;padding-left:20px}
+details li{margin-bottom:4px}
+.note{font-size:.85rem;color:var(--muted);margin:6px 0 0}
+.slot{font-size:clamp(1.6rem,6vw,2.4rem);font-weight:800;text-align:center;padding:22px 10px;background:var(--alt);border-radius:16px;margin:14px 0;min-height:4.2rem;word-break:break-word}
+.winners{display:grid;gap:8px;margin-top:10px}
+.win{background:#fff7f2;border:2px solid var(--accent);border-radius:14px;padding:12px 16px;font-weight:800;font-size:1.1rem;display:flex;justify-content:space-between;gap:10px}
+.win span:first-child{color:var(--muted);font-weight:600;font-size:.85rem;align-self:center}
+.win.res{background:var(--alt);border-color:var(--line);font-size:1rem}
+.big-num{font-size:3.2rem;font-weight:800;line-height:1.1}
+.hist{margin:8px 0 0;padding-left:18px;font-size:.88rem;color:var(--muted)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap bar">
+    <strong>⚙️ Yönetim Paneli</strong>
+    <span id="status" class="pill off">Bağlı değil</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="tabs" id="tabs">
+    <button type="button" data-tab="conn" class="on">Bağlantı</button>
+    <button type="button" data-tab="camp">Kampanya</button>
+    <button type="button" data-tab="gift">Çekiliş</button>
+    <button type="button" data-tab="stat">Ziyaretçi</button>
+  </nav>
+
+  <!-- ============ BAĞLANTI ============ -->
+  <section id="tab-conn" class="panel on">
+    <h2>GitHub bağlantısı</h2>
+    <p class="lead">Panel, kampanya ve çekiliş ayarlarını sitenin GitHub deposuna kaydeder. Bunun için bir kerelik bir anahtar (token) gerekir.</p>
+
+    <details>
+      <summary>Token nasıl alınır? (adım adım)</summary>
+      <ol>
+        <li>github.com'a giriş yap, sağ üstte profil resmine tıkla → <b>Settings</b>.</li>
+        <li>Sol menünün en altında <b>Developer settings</b> → <b>Personal access tokens</b> → <b>Fine-grained tokens</b> → <b>Generate new token</b>.</li>
+        <li><b>Token name:</b> yonetim-paneli · <b>Expiration:</b> 90 gün.</li>
+        <li><b>Repository access:</b> <i>Only select repositories</i> seç, sitenin deposunu (örn. <code>Piksel30.github.io</code>) ekle.</li>
+        <li><b>Permissions → Repository permissions → Contents:</b> <i>Read and write</i> yap.</li>
+        <li><b>Generate token</b>'a bas, çıkan kodu kopyala (bir daha gösterilmez) ve aşağıya yapıştır.</li>
+      </ol>
+      <p class="note">Token bir şifre gibidir: kimseyle paylaşma, ekran görüntüsüne alma. Süresi dolunca aynı adımlarla yenisini al.</p>
+    </details>
+
+    <div class="row">
+      <label>GitHub kullanıcı adı <input id="owner" autocomplete="off" placeholder="Piksel30"></label>
+      <label>Depo adı <input id="repo" autocomplete="off" placeholder="Piksel30.github.io"></label>
+    </div>
+    <label>Token <input id="token" type="password" autocomplete="off" placeholder="github_pat_..."></label>
+    <label class="check"><input id="remember" type="checkbox"> Bu cihazda hatırla (sadece kendi telefonunda/bilgisayarında işaretle)</label>
+    <div class="btns">
+      <button type="button" id="connect" class="btn">Bağlan ve test et</button>
+      <button type="button" id="logout" class="btn ghost">Çıkış yap (token'ı sil)</button>
+    </div>
+    <p id="connMsg" class="msg" role="status"></p>
+  </section>
+
+  <!-- ============ KAMPANYA ============ -->
+  <section id="tab-camp" class="panel">
+    <h2>Kampanya</h2>
+    <p class="lead">Sitenin üstünde şerit olarak görünür, sepette indirim otomatik uygulanır.</p>
+    <label class="check"><input id="cActive" type="checkbox"> Kampanya açık</label>
+    <label>Şeritte görünecek yazı <input id="cText" maxlength="90" placeholder="Örn: 3 ürün al, %10 indirim kazan!"></label>
+    <div class="row">
+      <label>İndirim yüzdesi (%) <input id="cPercent" type="number" min="1" max="90" value="10"></label>
+      <label>En az kaç ürün? <input id="cMin" type="number" min="1" value="3"></label>
+      <label>Son gün (boşsa süresiz) <input id="cEnd" type="date"></label>
+    </div>
+    <p class="note">Önizleme</p>
+    <div id="cPreview" class="preview"></div>
+    <p id="cInfo" class="note"></p>
+    <div class="btns"><button type="button" id="cSave" class="btn">Yayınla</button></div>
+    <p id="cMsg" class="msg" role="status"></p>
+  </section>
+
+  <!-- ============ ÇEKİLİŞ ============ -->
+  <section id="tab-gift" class="panel">
+    <h2>Çekiliş</h2>
+    <p class="lead">1) Çekilişi sitede duyur → 2) katılımcıları topla → 3) aşağıdan adil şekilde kazananı seç.</p>
+
+    <h3>1) Çekiliş duyurusu (sitede kart olarak görünür)</h3>
+    <label class="check"><input id="gActive" type="checkbox"> Çekiliş açık</label>
+    <label>Başlık <input id="gTitle" maxlength="70" placeholder="Örn: Spinner Ball çekilişi"></label>
+    <label>Ödül <input id="gPrize" maxlength="90" placeholder="Örn: 1 adet Spinner Ball"></label>
+    <label>Kurallar <textarea id="gRules" rows="3" maxlength="400" placeholder="Örn: Katılım ücretsizdir. Butona basıp WhatsApp'tan adını yaz. Kazanan rastgele seçilir ve WhatsApp'tan haber verilir."></textarea></label>
+    <label>Son katılım günü <input id="gEnd" type="date"></label>
+    <div class="btns"><button type="button" id="gSave" class="btn">Duyuruyu yayınla</button></div>
+    <p id="gMsg" class="msg" role="status"></p>
+    <p class="note">Katılmak isteyenler butona basınca WhatsApp'ında "çekilişe katılmak istiyorum" mesajı + adı gelir. Katılımcıları oradan toplarsın.</p>
+
+    <hr>
+    <h3>2) Kazananı seç</h3>
+    <label>Katılımcılar (her satıra bir kişi) <textarea id="pList" rows="7" placeholder="Ali Yılmaz&#10;Ayşe Demir&#10;@kullanici3"></textarea></label>
+    <div class="row">
+      <label>Asıl kazanan sayısı <input id="pWin" type="number" min="1" value="1"></label>
+      <label>Yedek sayısı <input id="pRes" type="number" min="0" value="1"></label>
+    </div>
+    <label class="check"><input id="pDedup" type="checkbox" checked> Aynı kişiyi bir kez say (tekrar edenleri çıkar)</label>
+    <p id="pCount" class="note"></p>
+    <div class="btns"><button type="button" id="draw" class="btn">🎲 Çekilişi yap</button></div>
+    <p id="dMsg" class="msg" role="status"></p>
+    <div id="slot" class="slot" hidden></div>
+    <div id="winners" class="winners"></div>
+
+    <div id="afterDraw" hidden>
+      <label style="margin-top:16px">Sitede görünecek kazanan yazısı (isim gizlenmiş hâli) <input id="gResultTxt" maxlength="90"></label>
+      <div class="btns">
+        <button type="button" id="gAnnounce" class="btn">Kazananı sitede duyur</button>
+        <button type="button" id="copyRes" class="btn ghost">Sonucu kopyala</button>
+      </div>
+      <p id="aMsg" class="msg" role="status"></p>
+    </div>
+
+    <details style="margin-top:18px">
+      <summary>Adil ve güvenilir olması için</summary>
+      <ul>
+        <li>Seçim, tarayıcının güvenli rastgele sayı üretecini kullanır. Sonucu kimse yönlendiremez.</li>
+        <li>Çekilişi canlı yayında veya ekran kaydıyla yap, kazananı ve katılımcı sayısını paylaş.</li>
+        <li>Katılımı satın almaya bağlama ve kuralları baştan açıkça yaz. Çekiliş kurallarının yasal şartlarını bir yetişkinle birlikte araştır.</li>
+        <li>Katılımcıların tam isimlerini herkese açık paylaşma, siteye gizlenmiş hâli çıkar (örn. A*** Y***).</li>
+      </ul>
+    </details>
+
+    <p class="note" style="margin-top:14px">Son çekilişler (bu cihazda)</p>
+    <ul id="hist" class="hist"></ul>
+    <div class="btns"><button type="button" id="clearHist" class="btn ghost">Geçmişi temizle</button></div>
+  </section>
+
+  <!-- ============ ZİYARETÇİ ============ -->
+  <section id="tab-stat" class="panel">
+    <h2>Ziyaretçi sayısı</h2>
+    <p class="lead">Ücretsiz GoatCounter servisi sitenin görüntülenmelerini sayar. Bu sayfa toplam sayıyı gösterir.</p>
+    <div class="big-num" id="count">—</div>
+    <p id="countInfo" class="note"></p>
+    <div class="btns">
+      <button type="button" id="refresh" class="btn ghost">Yenile</button>
+      <a id="gcLink" class="btn ghost" target="_blank" rel="noopener" hidden>GoatCounter panelini aç</a>
+    </div>
+
+    <hr>
+    <details>
+      <summary>Kurulum (bir kerelik)</summary>
+      <ol>
+        <li>goatcounter.com/signup adresinde hesap aç. <b>Code</b> kısmına bir ad seç (örn. <code>yigityo3d</code>). Siten <code>yigityo3d.goatcounter.com</code> olur.</li>
+        <li>Giriş yap → <b>Settings</b> → <b>Allow adding visitor counts on your website</b> kutusunu işaretle, kaydet.</li>
+        <li>Aşağıya seçtiğin code'u yaz, <b>Kaydet</b>'e bas. Site sayımı otomatik başlatır, başka bir şey yapman gerekmez.</li>
+        <li>Kendi ziyaretlerini saymamak için, her cihazında sitenin adresinin sonuna <code>#toggle-goatcounter</code> ekleyip bir kez aç.</li>
+      </ol>
+    </details>
+    <label>GoatCounter code <input id="gcCode" maxlength="40" placeholder="yigityo3d" autocomplete="off"></label>
+    <div class="btns"><button type="button" id="gcSave" class="btn">Kaydet</button></div>
+    <p id="gcMsg" class="msg" role="status"></p>
+    <p class="note">Sayı "sayfa görüntülenmesi"dir (aynı kişi iki kez girerse iki sayılır). Ayrıntılı rapor (günlük, ülke, hangi site) için GoatCounter panelini aç. Sayı birkaç saate kadar geç güncellenebilir.</p>
+  </section>
+</main>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const LS = "yigityo-admin-v1", HIST = "yigityo-admin-hist";
+const S = { owner: "", repo: "", token: "", connected: false, repoOk: false, remote: {} };
+let lastDraw = null;
+
+/* ---------- yardımcılar ---------- */
+const store = {
+  get(k, session) { try { return (session ? sessionStorage : localStorage).getItem(k); } catch (e) { return null; } },
+  set(k, v, session) { try { (session ? sessionStorage : localStorage).setItem(k, v); } catch (e) {} },
+  del(k) { try { localStorage.removeItem(k); sessionStorage.removeItem(k); } catch (e) {} }
+};
+const enc = s => { const b = new TextEncoder().encode(s); let bin = ""; for (let i = 0; i < b.length; i++) bin += String.fromCharCode(b[i]); return btoa(bin); };
+const dec = s => { const bin = atob(s.replace(/\s/g, "")); return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0))); };
+const validCode = c => /^[a-z0-9-]{2,40}$/i.test(c || "");
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+function say(el, text, kind) { el.textContent = text || ""; el.className = "msg" + (kind ? " " + kind : ""); }
+function showTab(name) {
+  document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === name));
+  document.querySelectorAll(".panel").forEach(p => p.classList.toggle("on", p.id === "tab-" + name));
+}
+document.querySelectorAll("#tabs button").forEach(b => b.addEventListener("click", () => showTab(b.dataset.tab)));
+
+/* ---------- GitHub API ---------- */
+function explain(st, j) {
+  if (st === 401) return "Token geçersiz ya da süresi dolmuş. Yeni bir token oluşturup tekrar bağlan.";
+  if (st === 403) return "İzin yok. Token'da bu depo için 'Contents: Read and write' izni var mı? (Ya da çok fazla deneme yapıldı, biraz bekle.)";
+  if (st === 404) return "Depo bulunamadı ya da token bu depoya erişemiyor. Kullanıcı adı, depo adı ve token'ın seçili deposunu kontrol et.";
+  if (st === 409 || st === 422) return "Dosya başka bir yerden değişmiş, tekrar dene.";
+  return "GitHub hatası (" + st + ")" + (j && j.message ? ": " + j.message : "");
+}
+async function gh(method, path, body) {
+  if (!S.token) throw Object.assign(new Error("Önce Bağlantı sekmesinden bağlan."), { status: 0, noToken: true });
+  let r;
+  try {
+    r = await fetch("https://api.github.com" + path, {
+      method, cache: "no-store",
+      headers: Object.assign({ Accept: "application/vnd.github+json", Authorization: "Bearer " + S.token }, body ? { "Content-Type": "application/json" } : {}),
+      body: body ? JSON.stringify(body) : undefined
+    });
+  } catch (e) { throw Object.assign(new Error("GitHub'a ulaşılamadı. İnternet bağlantını kontrol et."), { status: 0 }); }
+  let j = null; try { j = await r.json(); } catch (e) {}
+  if (!r.ok) throw Object.assign(new Error(explain(r.status, j)), { status: r.status });
+  return j;
+}
+const FILE = () => `/repos/${S.owner}/${S.repo}/contents/ayarlar.json`;
+async function readRemote() {
+  try {
+    const j = await gh("GET", FILE());
+    let data = {}; try { data = JSON.parse(dec(j.content)) || {}; } catch (e) { data = {}; }
+    return { sha: j.sha, data };
+  } catch (e) {
+    if (e.status === 404 && S.repoOk) return { sha: null, data: {} };
+    throw e;
+  }
+}
+async function publish(mutate, message) {
+  for (let i = 0; i < 2; i++) {
+    const cur = await readRemote();                       // her kayıttan önce güncel hâli oku (başka cihazdaki değişikliği ezme)
+    const data = mutate(JSON.parse(JSON.stringify(cur.data)));
+    data.updated = new Date().toISOString();
+    const body = { message, content: enc(JSON.stringify(data, null, 2) + "\n") };
+    if (cur.sha) body.sha = cur.sha;
+    try { await gh("PUT", FILE(), body); S.remote = data; return data; }
+    catch (e) { if ((e.status === 409 || e.status === 422) && i === 0) continue; throw e; }
+  }
+}
+async function run(btn, out, fn, okText) {
+  if (!S.connected) { say(out, "Önce Bağlantı sekmesinden bağlan.", "err"); showTab("conn"); return; }
+  btn.disabled = true; say(out, "Kaydediliyor...", "");
+  try { await fn(); say(out, okText, "ok"); }
+  catch (e) { say(out, e.message, "err"); if (e.noToken) showTab("conn"); }
+  finally { btn.disabled = false; }
+}
+
+/* ---------- bağlantı ---------- */
+function setStatus() {
+  const s = $("status");
+  s.textContent = S.connected ? "Bağlı: " + S.owner + "/" + S.repo : "Bağlı değil";
+  s.className = "pill " + (S.connected ? "on" : "off");
+}
+function persist() {
+  const v = JSON.stringify({ owner: S.owner, repo: S.repo, token: S.token });
+  store.del(LS);
+  store.set(LS, v, !$("remember").checked);
+}
+async function connect() {
+  S.owner = $("owner").value.trim(); S.repo = $("repo").value.trim(); S.token = $("token").value.trim();
+  const out = $("connMsg");
+  if (!S.owner || !S.repo || !S.token) { say(out, "Üç alanı da doldur.", "err"); return; }
+  $("connect").disabled = true; say(out, "Bağlanılıyor...", "");
+  try {
+    await gh("GET", `/repos/${S.owner}/${S.repo}`); S.repoOk = true;
+    S.remote = (await readRemote()).data; S.connected = true;
+    persist(); fillForms(); setStatus();
+    say(out, "Bağlandı ✓ Artık Kampanya, Çekiliş ve Ziyaretçi sekmelerini kullanabilirsin.", "ok");
+  } catch (e) { S.connected = false; setStatus(); say(out, e.message, "err"); }
+  finally { $("connect").disabled = false; }
+}
+$("connect").addEventListener("click", connect);
+$("logout").addEventListener("click", () => {
+  store.del(LS); S.token = ""; S.connected = false; S.repoOk = false; S.remote = {};
+  $("token").value = ""; setStatus(); say($("connMsg"), "Çıkış yapıldı, token bu cihazdan silindi.", "ok");
+});
+
+/* ---------- kampanya ---------- */
+function updatePreview() {
+  const on = $("cActive").checked, t = $("cText").value.trim();
+  $("cPreview").textContent = on ? (t || "(yazı boş)") : "Kampanya kapalı: sitede şerit görünmez";
+  const p = Number($("cPercent").value), m = Math.floor(Number($("cMin").value)), e = $("cEnd").value;
+  $("cInfo").textContent = on
+    ? `Sepette ${m || 1} ve üzeri ürün alana %${p || 0} indirim uygulanır` + (e ? `, ${e} gününün sonuna kadar.` : ", süresiz.")
+    : "";
+}
+["cActive", "cText", "cPercent", "cMin", "cEnd"].forEach(id => $(id).addEventListener("input", updatePreview));
+$("cSave").addEventListener("click", () => run($("cSave"), $("cMsg"), async () => {
+  const active = $("cActive").checked, text = $("cText").value.trim();
+  const percent = Number($("cPercent").value), minItems = Math.floor(Number($("cMin").value)), endDate = $("cEnd").value;
+  if (active) {
+    if (!text) throw new Error("Şeritte görünecek yazıyı doldur.");
+    if (!(percent >= 1 && percent <= 90)) throw new Error("İndirim yüzdesi 1 ile 90 arasında olmalı.");
+    if (!(minItems >= 1)) throw new Error("En az ürün sayısı 1 veya daha fazla olmalı.");
+  }
+  await publish(d => { d.campaign = { active, text, percent: percent || 0, minItems: minItems || 1, endDate }; return d; },
+    active ? "Kampanya güncellendi" : "Kampanya kapatıldı");
+}, "Yayınlandı ✓ Sitede görünmesi 1-3 dakika sürebilir."));
+
+/* ---------- çekiliş duyurusu ---------- */
+$("gSave").addEventListener("click", () => run($("gSave"), $("gMsg"), async () => {
+  const active = $("gActive").checked, title = $("gTitle").value.trim(), prize = $("gPrize").value.trim();
+  const rules = $("gRules").value.trim(), endDate = $("gEnd").value;
+  if (active && !title) throw new Error("Çekiliş başlığını yaz.");
+  await publish(d => {
+    const old = d.giveaway || {};
+    d.giveaway = { active, title, prize, rules, endDate, result: active ? "" : (old.result || "") };
+    return d;
+  }, active ? "Çekiliş duyurusu güncellendi" : "Çekiliş kapatıldı");
+}, "Yayınlandı ✓ Sitede görünmesi 1-3 dakika sürebilir."));
+
+/* ---------- çekiliş aracı ---------- */
+function secureInt(n) {                       // [0, n) aralığında önyargısız güvenli rastgele sayı
+  const max = Math.floor(0x100000000 / n) * n, a = new Uint32Array(1);
+  do { crypto.getRandomValues(a); } while (a[0] >= max);
+  return a[0] % n;
+}
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) { const j = secureInt(i + 1); [arr[i], arr[j]] = [arr[j], arr[i]]; }
+  return arr;
+}
+function parseNames() {
+  const raw = $("pList").value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+  if (!$("pDedup").checked) return { names: raw, removed: 0 };
+  const seen = new Set(), names = [];
+  for (const n of raw) { const k = n.toLocaleLowerCase("tr").replace(/^@/, ""); if (!seen.has(k)) { seen.add(k); names.push(n); } }
+  return { names, removed: raw.length - names.length };
+}
+function updateCount() {
+  const { names, removed } = parseNames();
+  $("pCount").textContent = names.length + " katılımcı" + (removed ? ` (${removed} tekrar çıkarıldı)` : "");
+}
+["pList", "pDedup"].forEach(id => $(id).addEventListener("input", updateCount));
+const mask = n => n.trim().split(/\s+/).map(w => w.replace(/^@/, "")).filter(Boolean).map(w => [...w][0] + "***").join(" ");
+function loadHist() { try { return JSON.parse(store.get(HIST, false) || "[]"); } catch (e) { return []; } }
+function renderHist() {
+  const ul = $("hist"); ul.textContent = "";
+  const h = loadHist();
+  if (!h.length) { const li = document.createElement("li"); li.textContent = "Henüz çekiliş yapılmadı."; ul.append(li); return; }
+  h.slice(0, 5).forEach(x => {
+    const li = document.createElement("li");
+    li.textContent = `${x.t} · ${x.total} katılımcı · kazanan: ${x.winners.join(", ")}`;
+    ul.append(li);
+  });
+}
+function addWin(parent, label, name, res) {
+  const d = document.createElement("div"); d.className = "win" + (res ? " res" : "");
+  const a = document.createElement("span"), b = document.createElement("span");
+  a.textContent = label; b.textContent = name; d.append(a, b); parent.append(d);
+}
+$("draw").addEventListener("click", async () => {
+  const out = $("dMsg"), { names } = parseNames();
+  const w = Math.max(1, Math.floor(Number($("pWin").value)) || 1), r = Math.max(0, Math.floor(Number($("pRes").value)) || 0);
+  if (names.length < 1) { say(out, "Önce katılımcıları yaz.", "err"); return; }
+  if (names.length < w + r) { say(out, `Kazanan + yedek (${w + r}) katılımcı sayısından (${names.length}) fazla olamaz.`, "err"); return; }
+  say(out, "", ""); $("draw").disabled = true; $("afterDraw").hidden = true; $("winners").textContent = "";
+  const slot = $("slot"); slot.hidden = false;
+  const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const iv = setInterval(() => { slot.textContent = names[secureInt(names.length)]; }, 70);
+  await sleep(reduce ? 0 : 1800);
+  clearInterval(iv);
+  const order = shuffle(names.slice());
+  const winners = order.slice(0, w), reserves = order.slice(w, w + r);
+  slot.textContent = winners.length === 1 ? "🎉 " + winners[0] : "🎉 " + winners.length + " kazanan belli oldu";
+  winners.forEach((n, i) => addWin($("winners"), "Asıl " + (i + 1), n, false));
+  reserves.forEach((n, i) => addWin($("winners"), "Yedek " + (i + 1), n, true));
+  lastDraw = { winners, reserves, total: names.length, t: new Date().toLocaleString("tr-TR") };
+  const h = loadHist(); h.unshift({ t: lastDraw.t, total: names.length, winners }); store.set(HIST, JSON.stringify(h.slice(0, 20)), false);
+  renderHist();
+  $("gResultTxt").value = "Kazanan: " + winners.map(mask).join(", ");
+  $("afterDraw").hidden = false; $("draw").disabled = false;
+});
+$("gAnnounce").addEventListener("click", () => run($("gAnnounce"), $("aMsg"), async () => {
+  const text = $("gResultTxt").value.trim();
+  if (!text) throw new Error("Sitede görünecek yazıyı doldur.");
+  await publish(d => { d.giveaway = Object.assign({}, d.giveaway || {}, { active: false, result: text }); return d; }, "Çekiliş sonucu duyuruldu");
+}, "Yayınlandı ✓ Çekiliş kapandı, kazanan yazısı sitede görünecek."));
+$("copyRes").addEventListener("click", async () => {
+  if (!lastDraw) return;
+  const txt = `Çekiliş sonucu (${lastDraw.t})\nKatılımcı sayısı: ${lastDraw.total}\n` +
+    lastDraw.winners.map((n, i) => `Asıl ${i + 1}: ${n}`).join("\n") +
+    (lastDraw.reserves.length ? "\n" + lastDraw.reserves.map((n, i) => `Yedek ${i + 1}: ${n}`).join("\n") : "");
+  try { await navigator.clipboard.writeText(txt); say($("aMsg"), "Kopyalandı ✓", "ok"); }
+  catch (e) { say($("aMsg"), "Kopyalanamadı, metni elle seç.", "err"); }
+});
+$("clearHist").addEventListener("click", () => { store.del(HIST); renderHist(); });
+
+/* ---------- ziyaretçi ---------- */
+async function refreshCounter() {
+  const code = $("gcCode").value.trim(), out = $("count"), info = $("countInfo"), link = $("gcLink");
+  if (!validCode(code)) { out.textContent = "—"; info.textContent = "Önce GoatCounter code'unu yazıp kaydet."; link.hidden = true; return; }
+  link.href = `https://${code}.goatcounter.com/`; link.hidden = false;
+  out.textContent = "…"; info.textContent = "";
+  try {
+    const r = await fetch(`https://${code}.goatcounter.com/counter/TOTAL.json`, { cache: "no-store" });
+    if (!r.ok) throw new Error("x");
+    const j = await r.json();
+    out.textContent = j.count;
+    info.textContent = "Toplam sayfa görüntülenmesi.";
+  } catch (e) {
+    out.textContent = "—";
+    info.textContent = "Sayı buradan okunamadı. GoatCounter ayarlarında 'Allow adding visitor counts on your website' açık mı? Ya da \"GoatCounter panelini aç\" butonuyla oradan bak.";
+  }
+}
+$("refresh").addEventListener("click", refreshCounter);
+$("gcSave").addEventListener("click", () => run($("gcSave"), $("gcMsg"), async () => {
+  const code = $("gcCode").value.trim();
+  if (code && !validCode(code)) throw new Error("Code sadece harf, rakam ve tire içermeli (en az 2 karakter).");
+  await publish(d => { if (code) d.goatcounter = code; else delete d.goatcounter; return d; }, "Ziyaretçi sayacı ayarlandı");
+  refreshCounter();
+}, "Kaydedildi ✓ Sayım sitede 1-3 dakika içinde başlar."));
+
+/* ---------- formları doldur ---------- */
+function fillForms() {
+  const c = S.remote.campaign || {}, g = S.remote.giveaway || {};
+  $("cActive").checked = c.active === true; $("cText").value = c.text || "";
+  $("cPercent").value = c.percent != null ? c.percent : 10; $("cMin").value = c.minItems != null ? c.minItems : 3; $("cEnd").value = c.endDate || "";
+  $("gActive").checked = g.active === true; $("gTitle").value = g.title || ""; $("gPrize").value = g.prize || "";
+  $("gRules").value = g.rules || ""; $("gEnd").value = g.endDate || "";
+  $("gcCode").value = S.remote.goatcounter || "";
+  updatePreview(); refreshCounter();
+}
+
+/* ---------- başlangıç ---------- */
+(function init() {
+  let owner = "", repo = "";
+  if (/\.github\.io$/i.test(location.hostname)) { owner = location.hostname.split(".")[0]; repo = location.hostname; }
+  let saved = null;
+  try { saved = JSON.parse(store.get(LS, false) || store.get(LS, true) || "null"); } catch (e) {}
+  if (saved) { owner = saved.owner || owner; repo = saved.repo || repo; $("token").value = saved.token || ""; $("remember").checked = !!store.get(LS, false); }
+  $("owner").value = owner; $("repo").value = repo;
+  updatePreview(); updateCount(); renderHist();
+  if (saved && saved.token) connect();
+})();
+})();
+</script>
+</body>
+</html>

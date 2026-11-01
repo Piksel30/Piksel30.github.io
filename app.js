@@ -19,6 +19,90 @@ const colorList = (p) => (Array.isArray(p.colors) ? p.colors : p.colors === true
 const optText = (i) =>
   [i.color ? `Renk: ${i.color}` : "", i.text ? `Yazı: ${i.text}` : ""].filter(Boolean).join(" · ");
 
+// ---------- Uzaktan ayarlar (ayarlar.json: yönetim panelinden gelir) ----------
+const $ = (id) => document.getElementById(id);
+const endOfDay = (d) => new Date(d + "T23:59:59").getTime();
+const expired = (d) => !!d && Date.now() > endOfDay(d);
+const validCode = (c) => typeof c === "string" && /^[a-z0-9-]{2,40}$/i.test(c);
+
+function campaignActive() {
+  const c = SITE.campaign;
+  if (!c || typeof c !== "object" || c.active === false) return false;
+  if (!isNum(c.percent) || !isNum(c.minItems) || c.percent <= 0) return false;
+  return !expired(c.endDate);
+}
+function giveawayState() {
+  const g = SITE.giveaway;
+  if (!g || typeof g !== "object") return null;
+  const live = g.active === true && !!g.title && !expired(g.endDate);
+  const done = !!g.result;
+  return live || done ? { g, live, done } : null;
+}
+function renderPromo() {
+  const p = $("promo");
+  p.textContent = "";
+  if (campaignActive() && SITE.campaign.text) p.append(document.createTextNode(SITE.campaign.text));
+  const st = giveawayState();
+  if (st && st.live) {
+    if (p.textContent) p.append(document.createTextNode(" · "));
+    const a = document.createElement("a");
+    a.href = "#cekilis";
+    a.textContent = "🎁 Çekiliş var, detaylar";
+    p.append(a);
+  }
+  p.hidden = !p.textContent;
+}
+function renderGiveaway() {
+  const sec = $("cekilis");
+  const st = giveawayState();
+  if (!st) { sec.hidden = true; return; }
+  const g = st.g;
+  $("gv-title").textContent = g.title || "Çekiliş";
+  $("gv-prize").textContent = g.prize ? "Ödül: " + g.prize : "";
+  $("gv-prize").hidden = !g.prize;
+  $("gv-rules").textContent = g.rules || "";
+  $("gv-rules").hidden = !g.rules;
+  const end = $("gv-end");
+  end.textContent = g.endDate && st.live
+    ? "Son katılım: " + new Date(g.endDate + "T00:00:00").toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })
+    : "";
+  end.hidden = !end.textContent;
+  const res = $("gv-result");
+  res.textContent = st.done ? "🎉 " + g.result : "";
+  res.hidden = !st.done;
+  const join = $("gv-join");
+  join.hidden = !st.live;
+  join.href = wa(`Merhaba, "${g.title}" çekilişine katılmak istiyorum.\nAd Soyad: `);
+  sec.hidden = false;
+}
+function loadCounter() {
+  const code = SITE.goatcounter;
+  if (!validCode(code) || $("gc") || location.protocol === "file:") return;
+  const s = document.createElement("script");
+  s.id = "gc";
+  s.async = true;
+  s.dataset.goatcounter = `https://${code}.goatcounter.com/count`;
+  s.src = "https://gc.zgo.at/count.js";
+  document.head.appendChild(s);
+}
+async function loadSettings() {
+  try {
+    const r = await fetch("ayarlar.json?v=" + Math.floor(Date.now() / 60000), { cache: "no-store" });
+    if (r.ok) {
+      const j = await r.json();
+      if (j && typeof j === "object") {
+        if (j.campaign && typeof j.campaign === "object") SITE.campaign = j.campaign;
+        if (j.giveaway && typeof j.giveaway === "object") SITE.giveaway = j.giveaway;
+        if (validCode(j.goatcounter)) SITE.goatcounter = j.goatcounter;
+      }
+    }
+  } catch (e) {}
+  renderPromo();
+  renderGiveaway();
+  renderCart();
+  loadCounter();
+}
+
 // ---------- Sepet verisi ----------
 function loadCart() {
   try {
@@ -49,7 +133,7 @@ function totals() {
   });
   let discount = 0;
   const c = SITE.campaign;
-  if (c && isNum(c.percent) && isNum(c.minItems) && n >= c.minItems) {
+  if (campaignActive() && n >= c.minItems) {
     discount = Math.round((sub * c.percent) / 100);
   }
   return { sub, discount, total: sub - discount, unpriced };
@@ -239,11 +323,8 @@ function init() {
   document.getElementById("about-text").textContent = SITE.about;
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  const promo = document.getElementById("promo");
-  if (SITE.campaign && SITE.campaign.text) {
-    promo.textContent = SITE.campaign.text;
-    promo.hidden = false;
-  }
+  renderPromo();
+  renderGiveaway();
 
   document.querySelectorAll("[data-wa]").forEach((el) => {
     el.href = wa("Merhaba, sitenizden yazıyorum.");
@@ -267,6 +348,8 @@ function init() {
     const input = card.querySelector('[data-opt="text"]');
     addToCart(b.dataset.add, sel ? sel.value : "", input ? input.value.trim() : "", input);
   });
+
+  loadSettings();
 }
 
 function buildFilters() {

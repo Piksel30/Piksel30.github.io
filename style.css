@@ -182,3 +182,11 @@ button.btn { font-family: inherit; }
 .card { min-width: 0; }
 .opts label { min-width: 0; }
 .opts select, .opts input { width: 100%; min-width: 0; box-sizing: border-box; }
+
+/* ---------- Çekiliş kartı ---------- */
+.promo a { color: #fff; text-decoration: underline; }
+.gv-card { background: var(--card); border: 2px dashed var(--accent); border-radius: 20px; padding: 26px 22px; text-align: center; }
+.gv-card h2 { margin-bottom: 8px; }
+.gv-prize { font-weight: 800; font-size: 1.15rem; margin: 0 0 10px; }
+.gv-result { font-weight: 800; font-size: 1.3rem; color: var(--accent-dark); margin: 10px 0 0; }
+.gv-card .btn { margin-top: 12px; }
