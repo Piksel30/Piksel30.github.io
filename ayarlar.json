@@ -1,0 +1,10 @@
+{
+  "campaign": {
+    "active": false,
+    "text": "tüm ürünlerde 100de 50 indirim",
+    "percent": 50,
+    "minItems": 1,
+    "endDate": "2026-11-01"
+  },
+  "updated": "2026-11-01T07:03:26.976Z"
+}
